@@ -34,6 +34,24 @@ void testPickupBall() {
   pickupBall(redBalls[0]);
 }
 
+void NavigationLoop() {
+  while(true) {
+
+
+    Navigate();
+
+  }
+}
+
+void BallSensorLoop() {
+  while(true) {
+
+    
+    doBallCheck();
+    PrintBalls();
+  }
+}
+
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
@@ -52,14 +70,12 @@ int main() {
   tryAddRed(Vector(6, 7)); // Should overlap
   PrintBalls();
 
-  while(true) {
-    doBallCheck();
-  }
+  thread(NavigationLoop).detach();
+  thread(BallSensorLoop).detach();
 
   NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
   InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));
   //PrintNodes();
-  //Navigate();
   /*do{
     printf("Teeeeeeeeeeeeeeeeeeeeeeee");
     ANavigate();

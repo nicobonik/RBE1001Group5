@@ -2,7 +2,7 @@
 #include <math.h>
 
 float clip(float val, float min, float max) {
-  return fmin(fmax(val, min), max);
+  return fminf(fmaxf(val, min), max);
 }
 
 float PID::update(float error) {

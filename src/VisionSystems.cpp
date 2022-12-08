@@ -17,7 +17,7 @@ int redBallCount, blueBallCount, yellowBallCount, holdCount;
 
 const float camAngle = -30, camAngleOffsetX = 0, camX = 0, camY = -4.75, camZ = 12, //GET
             degreesPerPixelX = 0.19327, degreesPerPixelY = 0.17113,
-            locationCheckTolerance = 4, pickupDrive = -5.5, driveKp = 10, turnKp = -5;
+            locationCheckTolerance = 4, pickupDrive = -5.5;
 const int centerX = 157, centerY = 110,
           holdCapacity = 5;
 
@@ -25,6 +25,8 @@ signature signatures[] { camera__YELLOWBALL, camera__REDBALL, camera__BLUEBALL }
 
 Bounds pickupCheckBounds = Bounds(Vector(157, 160), 35, 35);
 int holdOffset = 0;
+
+PID forwardPID(PIDCoefficients(10, 0, 5, -120, 120)), turnPID(PIDCoefficients(5, 0, 2.5, -60, 60));
 
 static Ball EMPTY_BALL = Ball(Vector(), -1, -1);
 
@@ -209,7 +211,7 @@ bool pickupBall(Ball& ball) {
       //printf("\tx: %f, y: %f\n", checkCenter.x, checkCenter.y);
       //printf("\tx: %f, y: %f\n", error.x, error.y);
       //Call odometry
-      driveRPM(error.y * driveKp, error.x * turnKp);
+      driveRPM(forwardPID.update(error.y), turnPID.update(-error.x));
       c = 0;
     } else {
       c++;

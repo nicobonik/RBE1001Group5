@@ -4,6 +4,7 @@
 #include <math.h>
 #include "DataTypes.h"
 #include "DriveFunctions.h"
+#include "PID.h"
 
 using namespace vex;
 
