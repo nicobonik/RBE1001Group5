@@ -5,10 +5,13 @@ const float wallX = 20, //Get
             rampX = 7, //Get
             rampY = 10, //Get
             rampSonarLength = 20, //Get
-            rightSonarOffsetX = 6, //Get
-            rightSonarOffsetY = -4.25, //Get
-            forwardSonarOffsetY = 1.5, //Get
-            dropoffDistance = 0; //Get
+            rightSonarOffsetX = 6,
+            rightSonarOffsetY = -4.25,
+            forwardSonarOffsetY = 1.5,
+            forwardLineSensorOffset = 0, //Get
+            lineHalfWidth = 1 / 2, //GET
+            lineX = 0, //GET
+            lineY = 0; //GET
 
 RotatedBounds collisionBounds = RotatedBounds(Vector(), Vector(), Vector(), 0);
 
@@ -38,17 +41,58 @@ void StopNavigation() {
 }
 
 void getStartPosition() {
+  heading = PI / 2;
+  position.y = 0;
+  position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
+  getPositionUsingLine();
+}
+void getPositionUsingLine() { // Will have issues if it starts stradling a line, use intake sensors to check this?
+  bool hitFirstValid = false;
+  bool leftHitFirst = false;
   while(true) {
-    float err = forwardRightLine.value(percent) - forwardLeftLine.value(percent);
-    if(fabsf(err) < 5 && forwardRightLine.value(percent) < 30) {
+    float err = forwardRightLine.reflectivity() - forwardLeftLine.reflectivity();
+    if(fabsf(err) < 5 && forwardLeftLine.reflectivity() < 30 && forwardRightLine.reflectivity() < 30) {
       driveRPM(60, 0);
     } else if(fabsf(err) > 5) {
+      if(!hitFirstValid) {
+        hitFirstValid = true;
+        if(err < 0) leftHitFirst = true;
+      }
       driveRPM(30, err);
     } else break;
   }
-  heading = 0;
-  position.y = wallY - forwardSonarOffsetY - forwardSonar.distance(inches);
-  position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
+  float headingMod = fmodf(heading, PI/2);
+  if(leftHitFirst) heading += PI/2 - headingMod;
+  else heading -= headingMod;
+
+  int direction = (int)(heading * 2 / PI) % 4;
+  switch(direction) {
+    case 0: // facing East
+      if(position.x > 0) // do sonar check?
+        position.x = lineX - lineHalfWidth - forwardLineSensorOffset;
+      else if(position.x > -lineX + lineHalfWidth - forwardLineSensorOffset)
+        position.x = -lineHalfWidth - forwardLineSensorOffset;
+      else {
+        position.x = -lineX - lineHalfWidth - forwardLineSensorOffset;
+      }
+      position.y = rightSonarOffsetX + rightSonar.distance(inches);
+      break;
+    case 1: // facing North
+      position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
+      position.y = lineY - lineHalfWidth - forwardLineSensorOffset;
+      break;
+    case 2: // facing West
+      position.x = 0; //SIDE CHECK
+      position.y = wallY - rightSonarOffsetX - rightSonar.distance(inches);
+      break;
+    case 3: // facing South
+      position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
+      position.y = lineY + lineHalfWidth + forwardLineSensorOffset;
+      break;
+    default:
+      printf("Heading Direction %d invalid, how have you done this?", direction);
+  }
+
   Controller1.Screen.print(position.x);
   Controller1.Screen.print(", ");
   Controller1.Screen.print(position.y);

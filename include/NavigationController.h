@@ -22,6 +22,7 @@ void StopNavigation();
 bool IsNavActive();
 
 void getStartPosition();
+void getPositionUsingLine();
 
 void moveTo(NavNode node);
 

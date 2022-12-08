@@ -53,11 +53,16 @@ int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   printf("Starting...\n");
+  
+  forwardSonar.distance(inches);
+  rightSonar.distance(inches);
+  wait(3, seconds);
+
+  printf("\tSonar Wait Done\n");
 
   Controller1.ButtonLeft.pressed(getStartPosition);
 
   Controller1.ButtonRight.pressed(testPickupBall);
-  
   
   heading = PI / 2;
 
