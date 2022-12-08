@@ -1,0 +1,128 @@
+#include "DriveFunctions.h"
+
+const float wheelDiameter = 4.0;
+const float wheelCircumference = PI * wheelDiameter;
+const float gearRatio = 5.0;
+const float wheelTrack = 11; //GET
+const float degreesPerInch = 360.0 / wheelCircumference;
+const float intakeDegPerBall = 4 * 5 * 190 / 3;
+
+const float DefaultRPM = 120;
+float RPM = DefaultRPM;
+
+bool wheelForwardLeft = false, wheelForwardRight = false;
+const float wheelCorrectiveOffset = .25 / (gearRatio / degreesPerInch), wheelCorrectiveRPM = 60; //GET
+
+Vector position = Vector();
+float heading = 0;
+
+// The arguments are what they're going to be, not what they are
+void correctWheels(bool leftForward, bool rightForward) {
+  if(leftForward != wheelForwardLeft) {
+    leftMotor.setVelocity(wheelCorrectiveRPM, rpm);
+    leftMotor.spinFor(vex::directionType::fwd, wheelCorrectiveOffset * (leftForward? 1 : -1), degrees, rightForward == wheelForwardRight);
+    leftMotor.setVelocity(RPM, rpm);
+    wheelForwardLeft = leftForward;
+  }
+  
+  if(rightForward != wheelForwardRight) {
+    rightMotor.setVelocity(wheelCorrectiveRPM, rpm);
+    rightMotor.spinFor(vex::directionType::fwd, wheelCorrectiveOffset * (rightForward? 1 : -1), degrees, true);
+    rightMotor.setVelocity(RPM, rpm);
+    wheelForwardRight = rightForward;
+  }
+
+  leftMotor.setVelocity(RPM, rpm);
+  rightMotor.setVelocity(RPM, rpm);
+}
+
+// In inches per second
+void setSpeed(float speed) {
+  RPM = fabsf(speed * gearRatio * wheelCircumference);
+  leftMotor.setVelocity(RPM, rpm);
+  rightMotor.setVelocity(RPM, rpm);
+}
+
+bool isADriveDone() {
+  return rightMotor.isDone() && leftMotor.isDone();
+}
+
+void driveStraight(float inches) {
+  bool isForward = inches >= 0;
+  correctWheels(isForward, isForward);
+  leftMotor.spinFor(vex::directionType::fwd, gearRatio * inches * degreesPerInch, degrees, false);
+  rightMotor.spinFor(vex::directionType::fwd, gearRatio * inches * degreesPerInch, degrees, true);
+  position += Vector(inches, 0).rotate(heading);
+}
+
+void ADriveStraight(float inches) {
+  bool isForward = inches >= 0;
+  correctWheels(isForward, isForward);
+  leftMotor.spinFor(vex::directionType::fwd, gearRatio * inches * degreesPerInch, degrees, false);
+  rightMotor.spinFor(vex::directionType::fwd, gearRatio * inches * degreesPerInch, degrees, false);
+  position += Vector(inches, 0).rotate(heading);
+}
+
+void turnLeft(float targetRadians) {
+  bool isRight = targetRadians >= 0;
+  correctWheels(isRight, !isRight);
+  float rotationDegrees = targetRadians * Rad2Deg * gearRatio * wheelTrack / wheelDiameter;
+  leftMotor.spinFor(vex::directionType::fwd, -rotationDegrees, degrees, false);
+  rightMotor.spinFor(vex::directionType::fwd, rotationDegrees, degrees, true);
+  heading += targetRadians;
+}
+
+void ATurnLeft(float targetRadians) {
+  bool isRight = targetRadians >= 0;
+  correctWheels(isRight, !isRight);
+  float rotationDegrees = targetRadians * Rad2Deg * gearRatio * wheelTrack / wheelDiameter;
+  leftMotor.spinFor(vex::directionType::fwd, rotationDegrees, degrees, false);
+  rightMotor.spinFor(vex::directionType::fwd, -rotationDegrees, degrees, false);
+  heading += targetRadians * Deg2Rad;
+}
+
+void turnAround(float targetDegrees, float offset) {
+  float rotationMult = (targetDegrees / 180.0) * PI * gearRatio * degreesPerInch;
+  float leftDistance = offset + wheelTrack / 2;
+  float rightDistance = offset - wheelTrack / 2;
+  float m = wheelTrack / 2;
+  if(offset > 0) {
+    m = leftDistance;
+  }
+  else if (offset < 0) {
+    m = rightDistance;
+  }
+
+  if(offset < 0) {
+    rotationMult *= -1;
+  }
+  
+  correctWheels(leftDistance * rotationMult > 0,
+                rightDistance * rotationMult > 0);
+  
+  leftMotor.setVelocity(RPM * leftDistance / m, rpm);
+  rightMotor.setVelocity(RPM * rightDistance / m, rpm);
+
+  leftMotor.spinFor(vex::directionType::fwd, leftDistance * rotationMult, degrees, false);
+  rightMotor.spinFor(vex::directionType::fwd, rightDistance * rotationMult, degrees, true);
+
+  leftMotor.setVelocity(RPM, rpm);
+  rightMotor.setVelocity(RPM, rpm);
+  
+  position += Vector(0,offset).rotate(heading) +
+              Vector(0, -offset).rotate(heading + targetDegrees);
+  heading += targetDegrees * Deg2Rad;
+}
+
+void driveRPM(float speed, float turn) {
+
+  correctWheels(speed - turn > 0,
+                speed + turn > 0);
+
+  leftMotor.setVelocity( speed - turn, rpm);
+  rightMotor.setVelocity(speed + turn, rpm);
+
+  leftMotor.spin(forward);
+  rightMotor.spin(forward);
+
+}
