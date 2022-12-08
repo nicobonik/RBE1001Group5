@@ -36,10 +36,7 @@ void testPickupBall() {
 
 void NavigationLoop() {
   while(true) {
-
-
     Navigate();
-
   }
 }
 

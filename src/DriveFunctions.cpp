@@ -126,3 +126,12 @@ void driveRPM(float speed, float turn) {
   rightMotor.spin(forward);
 
 }
+
+void followLine(float inches, bool reverse) {
+  float m = reverse? -1 : 1;
+  double finalTime = (inches * 60 / (RPM * wheelCircumference)) + Brain.timer(seconds);
+  while(Brain.timer(seconds) < finalTime) {
+    driveRPM(RPM * m, intakeRightLine.reflectivity() - intakeLeftLine.reflectivity());
+  }
+  position += Vector(inches,0).rotate(heading) * m;
+}

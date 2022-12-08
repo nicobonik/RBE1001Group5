@@ -161,6 +161,7 @@ void removeRed(Ball& ball) {
   int ind = ballsIndexOf(redBalls, redBallCount, ball);
   ball.index = -1;
   if(ind < 0) return;
+  if(redBallCount == 0) return;
   for(int i = ind; i < redBallCount - 1; i++) {
     redBalls[i] = redBalls[i + 1];
     redBalls[i].index = i;
@@ -172,6 +173,7 @@ void removeBlue(Ball& ball) {
   int ind = ballsIndexOf(blueBalls, blueBallCount, ball);
   ball.index = -1;
   if(ind < 0) return;
+  if(blueBallCount == 0) return;
   for(int i = ind; i < blueBallCount - 1; i++) {
     blueBalls[i] = blueBalls[i + 1];
     blueBalls[i].index = i;
@@ -183,6 +185,7 @@ void removeYellow(Ball& ball) {
   int ind = ballsIndexOf(yellowBalls, yellowBallCount, ball);
   ball.index = -1;
   if(ind < 0) return;
+  if(yellowBallCount == 0) return;
   for(int i = ind; i < yellowBallCount - 1; i++) {
     yellowBalls[i] = yellowBalls[i + 1];
     yellowBalls[i].index = i;
@@ -229,9 +232,9 @@ bool pickupBall(Ball& ball) {
   printf("Speed Set To: %f", RPM);
   driveStraight(pickupDrive);
   intakeMotor.spinFor(vex::directionType::fwd, intakeDegPerBall, degrees, true); //Add something to make sure it picked up the ball?
-  //removeBall(ball);
-  //holding[holdCount] = ball;
-  //holdCount++;
+  removeBall(ball);
+  holding[holdCount] = ball;
+  holdCount++;
   return true;
 }
 

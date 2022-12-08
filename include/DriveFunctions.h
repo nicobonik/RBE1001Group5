@@ -37,3 +37,4 @@ void ATurnLeft(float targetRadians);
 void turnAround(float targetDegrees, float offset);
 
 void driveRPM(float speed, float turn);
+void followLine(float inches, bool reverse = false);

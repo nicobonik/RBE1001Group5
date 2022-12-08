@@ -59,8 +59,17 @@ void moveTo(NavNode node) {
   Vector relPos = (node.pos - position) * (node.reverse? -1 : 1);
   printf("x:%f, y:%f, h:%f, rh: %f, d: %f\n", relPos.x, relPos.y, relPos.heading() * Rad2Deg, heading * Rad2Deg, relPos.len());
   turnLeft(relPos.heading() - heading);
+  //Do odometry
   driveStraight(relPos.len() * (node.reverse? -1 : 1));
-  if(node.heading < 360) turnLeft(node.heading - heading);
+  //Do Odometry
+  if(node.heading < 360) {
+    turnLeft(node.heading - heading);
+    //Do Odometry
+  }
+  if(node.pickup) {
+    pickupBall(node.ball);
+    //Do Odometry
+  }
 }
 
 //Only interupts from sensors or timer can be run while this is active, if those can even be run
