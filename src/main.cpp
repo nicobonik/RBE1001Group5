@@ -31,7 +31,8 @@
 using namespace vex;
 
 void testPickupBall() {
-  pickupBall(redBalls[0]);
+  Ball ball = Ball(Vector(), -1, 1);
+  pickupBall(ball);
 }
 
 void NavigationLoop() {
@@ -72,8 +73,8 @@ int main() {
   tryAddRed(Vector(6, 7)); // Should overlap
   PrintBalls();
 
-  thread(NavigationLoop).detach();
-  thread(BallSensorLoop).detach();
+  //thread(NavigationLoop).detach();
+  //thread(BallSensorLoop).detach();
 
   NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
   InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));

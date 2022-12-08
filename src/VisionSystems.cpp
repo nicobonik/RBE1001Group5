@@ -17,7 +17,7 @@ int redBallCount, blueBallCount, yellowBallCount, holdCount;
 
 const float camAngle = -30, camAngleOffsetX = 0, camX = 0, camY = -4.75, camZ = 12, //GET
             degreesPerPixelX = 0.19327, degreesPerPixelY = 0.17113,
-            locationCheckTolerance = 4, pickupDrive = -5.5;
+            locationCheckTolerance = 4, pickupDrive = -6.5;
 const int centerX = 157, centerY = 110,
           holdCapacity = 5;
 
@@ -158,7 +158,9 @@ void removeBall(Ball& ball) {
   }
 }
 void removeRed(Ball& ball) {
+  printf("Removing Ball: i: %d\n", ball.index);
   int ind = ballsIndexOf(redBalls, redBallCount, ball);
+  printf("\tInd=%d\n", ind);
   ball.index = -1;
   if(ind < 0) return;
   if(redBallCount == 0) return;
@@ -219,8 +221,8 @@ bool pickupBall(Ball& ball) {
     } else {
       c++;
       if(c > 50) {
-        driveRPM(0, 0);
         printf("BREAK");
+        driveRPM(0, 0);
         return false;
       }
     }
