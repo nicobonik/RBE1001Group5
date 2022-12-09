@@ -31,7 +31,7 @@
 using namespace vex;
 
 void testPickupBall() {
-  Ball ball = Ball(Vector(), -1, 1);
+  Ball ball = Ball(Vector(), -1, 0);
   pickupBall(ball);
 }
 

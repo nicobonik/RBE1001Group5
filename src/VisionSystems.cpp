@@ -12,8 +12,8 @@
 //degreesPerPixel = 0.19327
 //pixelWidth = 314
 
-Ball redBalls[BallListSize], blueBalls[BallListSize], yellowBalls[BallListSize], holding[MaxHold];
-int redBallCount, blueBallCount, yellowBallCount, holdCount;
+Ball redBalls[BallListSize], blueBalls[BallListSize], holding[MaxHold];
+int redBallCount, blueBallCount, holdCount;
 
 const float camAngle = -30, camAngleOffsetX = 0, camX = 0, camY = -4.75, camZ = 12, //GET
             degreesPerPixelX = 0.19327, degreesPerPixelY = 0.17113,
@@ -21,7 +21,7 @@ const float camAngle = -30, camAngleOffsetX = 0, camX = 0, camY = -4.75, camZ = 
 const int centerX = 157, centerY = 110,
           holdCapacity = 5;
 
-signature signatures[] { camera__YELLOWBALL, camera__REDBALL, camera__BLUEBALL };
+signature signatures[] { camera__REDBALL, camera__BLUEBALL };
 
 Bounds pickupCheckBounds = Bounds(Vector(157, 160), 35, 35);
 int holdOffset = 0;
@@ -42,12 +42,9 @@ int ballsIndexOf(Ball balls[], int size, Ball ball) {
 void addBall(Ball& ball) {
   switch(ball.type){
     case 0:
-      addYellow(ball);
-      break;
-    case 1:
       addRed(ball);
       break;
-    case 2:
+    case 1:
       addBlue(ball);
       break;
   }
@@ -83,35 +80,18 @@ void addBlue(Ball& ball) {
     blueBallCount++;
   }
 }
-void addYellow(Ball& ball) {
-  if(yellowBallCount == BallListSize) {
-    yellowBalls[0].index = -1;
-    for(int i = 0;i < BallListSize - 1;i++){
-      yellowBalls[i] = yellowBalls[i + 1];
-      yellowBalls[i].index = i;
-    }
-    yellowBalls[BallListSize - 1] = ball;
-    ball.index = BallListSize - 1;
-  } else {
-    ball.index = yellowBallCount;
-    yellowBalls[yellowBallCount] = ball;
-    yellowBallCount++;
-  }
-}
 
 Ball& tryAddBall(Vector p, int type) {
   switch(type){
     case 0:
-      return tryAddYellow(p);
-    case 1:
       return tryAddRed(p);
-    case 2:
+    case 1:
       return tryAddBlue(p);
   }
   return EMPTY_BALL;
 }
 Ball& tryAddRed(Vector p) {
-  Ball ball = Ball(p, -1, 1);
+  Ball ball = Ball(p, -1, 0);
   int ind = ballsIndexOf(redBalls, redBallCount, ball);
   if(ind > -1) {
     redBalls[ind].pos = p;
@@ -122,7 +102,7 @@ Ball& tryAddRed(Vector p) {
   return redBalls[ind];
 }
 Ball& tryAddBlue(Vector p) {
-  Ball ball = Ball(p, -1, 2);
+  Ball ball = Ball(p, -1, 1);
   int ind = ballsIndexOf(blueBalls, blueBallCount, ball);
   if(ind > -1) {
     blueBalls[ind].pos = p;
@@ -132,27 +112,13 @@ Ball& tryAddBlue(Vector p) {
   addBlue(ball);
   return blueBalls[ind];
 }
-Ball& tryAddYellow(Vector p) {
-  Ball ball = Ball(p, -1, 0);
-  int ind = ballsIndexOf(yellowBalls, yellowBallCount, ball);
-  if(ind > -1) {
-    yellowBalls[ind].pos = p;
-    return yellowBalls[ind];
-  }
-  ind = yellowBallCount;
-  addYellow(ball);
-  return yellowBalls[ind];
-}
 
 void removeBall(Ball& ball) {
   switch(ball.type){
     case 0:
-      removeYellow(ball);
-      break;
-    case 1:
       removeRed(ball);
       break;
-    case 2:
+    case 1:
       removeBlue(ball);
       break;
   }
@@ -182,18 +148,6 @@ void removeBlue(Ball& ball) {
   }
   blueBalls[blueBallCount - 1] = EMPTY_BALL;
   blueBallCount--;
-}
-void removeYellow(Ball& ball) {
-  int ind = ballsIndexOf(yellowBalls, yellowBallCount, ball);
-  ball.index = -1;
-  if(ind < 0) return;
-  if(yellowBallCount == 0) return;
-  for(int i = ind; i < yellowBallCount - 1; i++) {
-    yellowBalls[i] = yellowBalls[i + 1];
-    yellowBalls[i].index = i;
-  }
-  yellowBalls[yellowBallCount - 1] = EMPTY_BALL;
-  yellowBallCount--;
 }
 
 bool pickupBall(Ball& ball) {
@@ -255,7 +209,7 @@ Vector getBallPosition(vision::object detected) {
 // Returns true if new ball is detected
 bool doBallCheck() {
   bool foundNew = false;
-  for(int type = 0; type < 3; type++){
+  for(int type = 0; type < 2; type++){
     camera.takeSnapshot(signatures[type]);
     for(int i = 0;i < camera.objectCount;i++){
       tryAddBall(getBallPosition(camera.objects[i]), type);
@@ -315,8 +269,6 @@ void PrintBallArray(Ball balls[], int size) {
   }
 }
 void PrintBalls() {
-  printf("Yellow:\n");
-  PrintBallArray(yellowBalls, yellowBallCount);
   printf("Red:\n");
   PrintBallArray(redBalls, redBallCount);
   printf("Blue:\n");

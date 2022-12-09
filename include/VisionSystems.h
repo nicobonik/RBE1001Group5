@@ -9,23 +9,20 @@
 using namespace vex;
 
 const int BallListSize = 8, MaxHold = 5;
-extern Ball redBalls[], blueBalls[], yellowBalls[], holding[];
-extern int redBallCount, blueBallCount, yellowBallCount, holdCount;
+extern Ball redBalls[], blueBalls[], holding[];
+extern int redBallCount, blueBallCount, holdCount;
 
 void addBall(Ball& ball);
 void addRed(Ball& ball);
 void addBlue(Ball& ball);
-void addYellow(Ball& ball);
 
 Ball& tryAddBall(Vector p, int type);
 Ball& tryAddRed(Vector p);
 Ball& tryAddBlue(Vector p);
-Ball& tryAddYellow(Vector p);
 
 void removeBall(Ball& ball);
 void removeRed(Ball& ball);
 void removeBlue(Ball& ball);
-void removeYellow(Ball& ball);
 
 bool pickupBall(Ball& ball);
 

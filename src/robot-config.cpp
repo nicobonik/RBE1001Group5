@@ -16,10 +16,10 @@ line forwardRightLine = line(Brain.ThreeWirePort.H);
 line intakeLeftLine = line(Brain.ThreeWirePort.E);
 line intakeRightLine = line(Brain.ThreeWirePort.F);
 /*vex-vision-config:begin*/
-signature camera__YELLOWBALL = signature (1, 4159, 5157, 4658, 1283, 1769, 1526, 3, 0);
+signature camera__YELLOWBALL = signature (1, 0, 0, 0, 0, 0, 0, 3, 0);
 signature camera__REDBALL = signature (2, 8153, 10867, 9510, -1361, -715, -1038, 3, 0);
 signature camera__BLUEBALL = signature (3, -2009, -1471, -1740, 7831, 9831, 8831, 2.5, 0);
-vision camera = vision (PORT9, 48, camera__YELLOWBALL, camera__REDBALL, camera__BLUEBALL);
+vision camera = vision (PORT9, 50, camera__YELLOWBALL, camera__REDBALL, camera__BLUEBALL);
 /*vex-vision-config:end*/
 motor intakeMotor = motor(PORT8, ratio18_1, false);
 motor leftMotor = motor(PORT1, ratio18_1, true);
