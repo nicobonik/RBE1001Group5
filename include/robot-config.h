@@ -8,8 +8,6 @@ using signature = vision::signature;
 extern controller Controller1;
 extern sonar forwardSonar;
 extern sonar rightSonar;
-extern line forwardLeftLine;
-extern line forwardRightLine;
 extern line intakeLeftLine;
 extern line intakeRightLine;
 extern signature camera__YELLOWBALL;

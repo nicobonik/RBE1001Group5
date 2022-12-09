@@ -16,6 +16,8 @@ extern const float wallX, wallY,
             dropoffDistance,
             intakeDegPerBall;
 
+extern bool onRight;
+
 void InitNavigation(NavNode n[], int size);
 void StopNavigation();
 

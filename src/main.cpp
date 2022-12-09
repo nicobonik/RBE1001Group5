@@ -13,10 +13,8 @@
 // Controller1          controller                    
 // forwardSonar         sonar         A, B            
 // rightSonar           sonar         C, D            
-// forwardLeftLine      line          G               
-// forwardRightLine     line          H               
-// intakeLeftLine       line          E               
-// intakeRightLine      line          F               
+// intakeLeftLine       line          G               
+// intakeRightLine      line          H               
 // camera               vision        9               
 // intakeMotor          motor         8               
 // leftMotor            motor         1               
@@ -31,24 +29,24 @@
 using namespace vex;
 
 void testPickupBall() {
-  Ball ball = Ball(Vector(), -1, 0);
+  int l = getLargestBall();
+  Ball ball = Ball(Vector(), -1, l);
   pickupBall(ball);
 }
 
 void NavigationLoop() {
   StopNavigation();
   while(true) {
-    printf("Nav Loop...");
+    //printf("Nav Loop...");
     Navigate();
   }
 }
 
 void BallSensorLoop() {
   while(true) {
-    printf("Sensor Loop...");
-
+    //printf("Sensor Loop...");
     
-    doBallCheck();
+    //doBallCheck();
   }
 }
 
@@ -59,7 +57,7 @@ int main() {
   
   forwardSonar.distance(inches);
   rightSonar.distance(inches);
-  wait(3, seconds);
+  wait(1, seconds);
 
   printf("\tSonar Wait Done\n");
 
@@ -69,6 +67,12 @@ int main() {
 
   getStartPosition();
 
+  testPickupBall();
+
+  turnLeft(PI / 2 * (onRight? -1 : 1));
+
+  testPickupBall();
+
   /*tryAddBlue(Vector(3, 7));
   tryAddRed(Vector(3, 7));
   tryAddRed(Vector(15, 6));
@@ -76,8 +80,8 @@ int main() {
   PrintBalls();*/
 
   printf("Starting Thread");
-  thread(NavigationLoop).detach();
-  thread(BallSensorLoop).detach();
+  //thread(NavigationLoop).detach();
+  //thread(BallSensorLoop).detach();
   printf("Threads Active");
 
   NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};

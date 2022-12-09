@@ -11,10 +11,8 @@ brain  Brain;
 controller Controller1 = controller(primary);
 sonar forwardSonar = sonar(Brain.ThreeWirePort.A);
 sonar rightSonar = sonar(Brain.ThreeWirePort.C);
-line forwardLeftLine = line(Brain.ThreeWirePort.G);
-line forwardRightLine = line(Brain.ThreeWirePort.H);
-line intakeLeftLine = line(Brain.ThreeWirePort.E);
-line intakeRightLine = line(Brain.ThreeWirePort.F);
+line intakeLeftLine = line(Brain.ThreeWirePort.G);
+line intakeRightLine = line(Brain.ThreeWirePort.H);
 /*vex-vision-config:begin*/
 signature camera__YELLOWBALL = signature (1, 0, 0, 0, 0, 0, 0, 3, 0);
 signature camera__REDBALL = signature (2, 8153, 10867, 9510, -1361, -715, -1038, 3, 0);

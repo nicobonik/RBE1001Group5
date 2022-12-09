@@ -1,17 +1,19 @@
 #include "NavigationController.h"
 
-const float wallX = 20, //Get
-            wallY = 20, //Get
-            rampX = 7, //Get
-            rampY = 10, //Get
+const float wallX = 47,
+            wallY = 72.5,
+            rampX = 12.75,
+            rampY = 26.75,
             rampSonarLength = 20, //Get
             rightSonarOffsetX = 6,
             rightSonarOffsetY = -4.25,
             forwardSonarOffsetY = 1.5,
-            forwardLineSensorOffset = 0, //Get
-            lineHalfWidth = 1 / 2, //GET
-            lineX = 0, //GET
-            lineY = 0; //GET
+            intakeLineSensorOffset = -8.75, //Get
+            lineHalfWidth = 1,
+            lineX = wallX - 9.75,
+            lineY = 18.25;
+
+bool onRight = true;
 
 RotatedBounds collisionBounds = RotatedBounds(Vector(), Vector(), Vector(), 0);
 
@@ -43,16 +45,16 @@ void StopNavigation() {
 bool getStartPosition() { // we start with the intake towards the wall, end with the intake away from the center
   position.y = lineY;
   position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
-  bool turnL = position.x > 0;
-  ADriveStraight(lineY);
-  while(forwardRightLine.reflectivity() < 30) if(isADriveDone()) return false;
-  driveStraight(lineHalfWidth);
-  turnLeft(90 * (turnL? 1 : -1) * Deg2Rad);
-  heading = (turnL? PI : 0); // use sonar to get rotation
+  onRight = position.x > 0;
+  ADriveStraight(-lineY);
+  while(intakeRightLine.value(percent) > 60) if(isADriveDone()) return false;
+  driveStraight(lineHalfWidth + intakeLineSensorOffset);
+  turnLeft(90 * (onRight? 1 : -1) * Deg2Rad);
+  heading = (onRight? PI : 0); // use sonar to get rotation
   return true;
 }
 
-void getPositionUsingLine() { // Will have issues if it starts stradling a line, use intake sensors to check this?
+/*void getPositionUsingLine() { // Will have issues if it starts stradling a line, use intake sensors to check this?
   bool hitFirstValid = false;
   bool leftHitFirst = false;
   while(true) {
@@ -102,7 +104,7 @@ void getPositionUsingLine() { // Will have issues if it starts stradling a line,
   Controller1.Screen.print(position.x);
   Controller1.Screen.print(", ");
   Controller1.Screen.print(position.y);
-}
+}*/
 
 void moveTo(NavNode node) {
   if(node.speed > 0) setSpeed(node.speed);

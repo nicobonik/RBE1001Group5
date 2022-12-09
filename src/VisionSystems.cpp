@@ -17,7 +17,7 @@ int redBallCount, blueBallCount, holdCount;
 
 const float camAngle = -30, camAngleOffsetX = 0, camX = 0, camY = -4.75, camZ = 12, //GET
             degreesPerPixelX = 0.19327, degreesPerPixelY = 0.17113,
-            locationCheckTolerance = 4, pickupDrive = -6.5;
+            locationCheckTolerance = 4, pickupDrive = -5.5;
 const int centerX = 157, centerY = 110,
           holdCapacity = 5;
 
@@ -221,6 +221,20 @@ bool doBallCheck() {
     }
   }
   return foundNew;
+}
+
+int getLargestBall() {
+  int largest = 0;
+  int maxArea = 0;
+  for(int i = 1; i < 2; i++) {
+    camera.takeSnapshot(signatures[i]);
+    int area = camera.largestObject.width * camera.largestObject.height;
+    if(area > maxArea) {
+      maxArea = area;
+      largest = i;
+    }
+  }
+  return largest;
 }
 
 void DepositBalls(int num, bool rev) {
