@@ -40,12 +40,18 @@ void StopNavigation() {
   nodeIndex = 0;
 }
 
-void getStartPosition() {
-  heading = PI / 2;
-  position.y = 0;
+bool getStartPosition() { // we start with the intake towards the wall, end with the intake away from the center
+  position.y = lineY;
   position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
-  getPositionUsingLine();
+  bool turnL = position.x > 0;
+  ADriveStraight(lineY);
+  while(forwardRightLine.reflectivity() < 30) if(isADriveDone()) return false;
+  driveStraight(lineHalfWidth);
+  turnLeft(90 * (turnL? 1 : -1) * Deg2Rad);
+  heading = (turnL? PI : 0); // use sonar to get rotation
+  return true;
 }
+
 void getPositionUsingLine() { // Will have issues if it starts stradling a line, use intake sensors to check this?
   bool hitFirstValid = false;
   bool leftHitFirst = false;

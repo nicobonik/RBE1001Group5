@@ -63,11 +63,11 @@ int main() {
 
   printf("\tSonar Wait Done\n");
 
-  Controller1.ButtonLeft.pressed(getStartPosition);
-
   Controller1.ButtonRight.pressed(testPickupBall);
   
   heading = PI / 2;
+
+  getStartPosition();
 
   /*tryAddBlue(Vector(3, 7));
   tryAddRed(Vector(3, 7));
