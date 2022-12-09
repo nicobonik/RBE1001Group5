@@ -49,7 +49,7 @@ void addBall(Ball& ball) {
       break;
   }
 }
-void addRed(Ball& ball) {
+int addRed(Ball& ball) {
   if(redBallCount == BallListSize) {
     redBalls[0].index = -1;
     for(int i = 0;i < BallListSize - 1;i++){
@@ -64,8 +64,9 @@ void addRed(Ball& ball) {
     redBallCount++;
     printf("Added Red Ball: x: %f, y: %f, i: %d\n", ball.pos.x, ball.pos.y, ball.index);
   }
+  return ball.index;
 }
-void addBlue(Ball& ball) {
+int addBlue(Ball& ball) {
   if(blueBallCount == BallListSize) {
     blueBalls[0].index = -1;
     for(int i = 0;i < BallListSize - 1;i++){
@@ -79,6 +80,7 @@ void addBlue(Ball& ball) {
     blueBalls[blueBallCount] = ball;
     blueBallCount++;
   }
+  return ball.index;
 }
 
 Ball& tryAddBall(Vector p, int type) {
@@ -97,8 +99,8 @@ Ball& tryAddRed(Vector p) {
     redBalls[ind].pos = p;
     return redBalls[ind];
   }
-  ind = redBallCount;
-  addRed(ball);
+  ind = addRed(ball);
+  printf("Added Red Ball: x: %f, y: %f, ind: %d\n", ball.pos.x, ball.pos.y, ball.index);
   return redBalls[ind];
 }
 Ball& tryAddBlue(Vector p) {
@@ -108,8 +110,8 @@ Ball& tryAddBlue(Vector p) {
     blueBalls[ind].pos = p;
     return blueBalls[ind];
   }
-  ind = blueBallCount;
-  addBlue(ball);
+  ind = addBlue(ball);
+  printf("Added Blue Ball: x: %f, y: %f, ind: %d\n", ball.pos.x, ball.pos.y, ball.index);
   return blueBalls[ind];
 }
 
@@ -185,7 +187,7 @@ bool pickupBall(Ball& ball) {
   setSpeed(1.5);
   Controller1.Screen.clearScreen();
   Controller1.Screen.print("Speed Set To: %f", RPM);
-  printf("Speed Set To: %f", RPM);
+  printf("Speed Set To: %f\n", RPM);
   driveStraight(pickupDrive);
   intakeMotor.spinFor(vex::directionType::fwd, intakeDegPerBall, degrees, true); //Add something to make sure it picked up the ball?
   removeBall(ball);
@@ -197,10 +199,12 @@ bool pickupBall(Ball& ball) {
 Vector getBallPosition(vision::object detected) {
   float theta_x = (detected.centerX - centerX) * degreesPerPixelX,
         theta_y = (detected.centerY - centerY) * degreesPerPixelY;
+  printf("\ttheta_x: %f, theta_y: %f\n", theta_x, theta_y);
   Vector pos = Vector();
   float m = camZ / fabsf(sinf(camAngle + theta_y));
-  pos.y = camY - m * cosf(camAngle + theta_y) ;
+  pos.y = camY - m * cosf(camAngle + theta_y);
   pos.x = camX - m * tanf(camAngleOffsetX + theta_x);
+  printf("\tm: %f, forward: %f, right: %f\n", m, pos.y, pos.x);
   pos = pos.rotate(heading);
   pos += position;
   return pos;
@@ -210,6 +214,7 @@ Vector getBallPosition(vision::object detected) {
 bool doBallCheck() {
   bool foundNew = false;
   for(int type = 0; type < 2; type++){
+    printf("Getting index %d\n", type);
     camera.takeSnapshot(signatures[type]);
     for(int i = 0;i < camera.objectCount;i++){
       tryAddBall(getBallPosition(camera.objects[i]), type);

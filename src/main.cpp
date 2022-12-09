@@ -37,16 +37,17 @@ void testPickupBall() {
 
 void NavigationLoop() {
   while(true) {
+    printf("Nav Loop...");
     Navigate();
   }
 }
 
 void BallSensorLoop() {
   while(true) {
+    printf("Sensor Loop...");
 
     
     doBallCheck();
-    PrintBalls();
   }
 }
 
@@ -67,22 +68,19 @@ int main() {
   
   heading = PI / 2;
 
-  tryAddBlue(Vector(3, 7));
+  /*tryAddBlue(Vector(3, 7));
   tryAddRed(Vector(3, 7));
   tryAddRed(Vector(15, 6));
   tryAddRed(Vector(6, 7)); // Should overlap
-  PrintBalls();
+  PrintBalls();*/
 
-  //thread(NavigationLoop).detach();
-  //thread(BallSensorLoop).detach();
+  printf("Starting Thread");
+  thread(NavigationLoop).detach();
+  thread(BallSensorLoop).detach();
+  printf("Threads Active");
 
   NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
   InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));
-  //PrintNodes();
-  /*do{
-    printf("Teeeeeeeeeeeeeeeeeeeeeeee");
-    ANavigate();
-  } while(IsNavActive());*/
 
   printf("Done\n");
 }

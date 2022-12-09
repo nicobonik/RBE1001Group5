@@ -13,8 +13,8 @@ extern Ball redBalls[], blueBalls[], holding[];
 extern int redBallCount, blueBallCount, holdCount;
 
 void addBall(Ball& ball);
-void addRed(Ball& ball);
-void addBlue(Ball& ball);
+int addRed(Ball& ball);
+int addBlue(Ball& ball);
 
 Ball& tryAddBall(Vector p, int type);
 Ball& tryAddRed(Vector p);
