@@ -3,15 +3,15 @@
 const float wheelDiameter = 4.0;
 const float wheelCircumference = PI * wheelDiameter;
 const float gearRatio = 5.0;
-const float wheelTrack = 11; //GET
+const float wheelTrack = 11;
 const float degreesPerInch = 360.0 / wheelCircumference;
-const float intakeDegPerBall = 4 * 5 * 190 / 3;
+const float intakeDegPerBall = 900; // 2 in / ball * 5 (gear ratio) * 360 (deg / rot) / (16 * 2/8) (in/rot) = 900 deg / ball
 
 const float DefaultRPM = 120;
 float RPM = DefaultRPM;
 
 bool wheelForwardLeft = false, wheelForwardRight = false;
-const float wheelCorrectiveOffset = .25 / (gearRatio / degreesPerInch), wheelCorrectiveRPM = 60; //GET
+const float wheelCorrectiveOffset = .25 * degreesPerInch/ gearRatio, wheelCorrectiveRPM = 60;
 
 Vector position = Vector();
 float heading = 0;

@@ -36,6 +36,7 @@ void testPickupBall() {
 }
 
 void NavigationLoop() {
+  StopNavigation();
   while(true) {
     printf("Nav Loop...");
     Navigate();
@@ -80,6 +81,7 @@ int main() {
   printf("Threads Active");
 
   NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
+  printf("Starting test navigation");
   InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));
 
   printf("Done\n");
