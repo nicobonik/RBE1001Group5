@@ -47,7 +47,7 @@ void StopNavigation() {
 
 bool getStartPosition() { // we start with the intake towards the wall, end with the intake away from the center
   position.y = lineY;
-  position.x = wallX - rightSonarOffsetX - rightSonar.distance(inches);
+  position.x = wallX - leftSonarOffsetX - leftForwardSonar.distance(inches);
   onRight = position.x > 0;
   ADriveStraight(-lineY);
   while(intakeRightLine.value(percent) > 60) if(isADriveDone()) return false;
