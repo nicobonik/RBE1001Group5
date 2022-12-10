@@ -17,7 +17,7 @@ int redBallCount, blueBallCount, holdCount;
 
 const float camAngle = -30, camAngleOffsetX = 0, camX = 0, camY = -4.75, camZ = 12, //GET
             degreesPerPixelX = 0.19327, degreesPerPixelY = 0.17113,
-            locationCheckTolerance = 4, pickupDrive = -5.5;
+            locationCheckTolerance = 4, pickupDrive = -5;
 const int centerX = 157, centerY = 110,
           holdCapacity = 5;
 
