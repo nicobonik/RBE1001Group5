@@ -10,7 +10,7 @@ brain  Brain;
 // VEXcode device constructors
 controller Controller1 = controller(primary);
 sonar forwardSonar = sonar(Brain.ThreeWirePort.A);
-sonar rightSonar = sonar(Brain.ThreeWirePort.C);
+sonar leftForwardSonar = sonar(Brain.ThreeWirePort.C);
 line intakeLeftLine = line(Brain.ThreeWirePort.G);
 line intakeRightLine = line(Brain.ThreeWirePort.H);
 /*vex-vision-config:begin*/
@@ -22,6 +22,7 @@ vision camera = vision (PORT9, 50, camera__YELLOWBALL, camera__REDBALL, camera__
 motor intakeMotor = motor(PORT8, ratio18_1, false);
 motor leftMotor = motor(PORT1, ratio18_1, true);
 motor rightMotor = motor(PORT10, ratio18_1, false);
+sonar leftBackSonar = sonar(Brain.ThreeWirePort.E);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

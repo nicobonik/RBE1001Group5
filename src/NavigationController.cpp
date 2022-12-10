@@ -106,6 +106,10 @@ bool getStartPosition() { // we start with the intake towards the wall, end with
   Controller1.Screen.print(position.y);
 }*/
 
+void getPositionUsingSonar() {
+  float d1 = 
+}
+
 void moveTo(NavNode node) {
   if(node.speed > 0) setSpeed(node.speed);
   Vector relPos = (node.pos - position) * (node.reverse? -1 : 1);

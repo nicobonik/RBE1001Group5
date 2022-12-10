@@ -7,7 +7,7 @@ using signature = vision::signature;
 // VEXcode devices
 extern controller Controller1;
 extern sonar forwardSonar;
-extern sonar rightSonar;
+extern sonar leftForwardSonar;
 extern line intakeLeftLine;
 extern line intakeRightLine;
 extern signature camera__YELLOWBALL;
@@ -21,6 +21,7 @@ extern vision camera;
 extern motor intakeMotor;
 extern motor leftMotor;
 extern motor rightMotor;
+extern sonar leftBackSonar;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

@@ -26,6 +26,8 @@ bool IsNavActive();
 bool getStartPosition();
 void getPositionUsingLine();
 
+void getPositionUsingSonar();
+
 void moveTo(NavNode node);
 
 void Navigate();
