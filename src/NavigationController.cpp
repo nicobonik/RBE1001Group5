@@ -32,14 +32,20 @@ void StopNavigation() {
 }
 
 bool getStartPosition() { // we start with the intake towards the wall, end with the intake away from the center
-  position.y = lineY;
-  position.x = wallX - leftSonarOffsetX - leftForwardSonar.distance(inches);
-  onRight = position.x > 0;
   ADriveStraight(-lineY);
   while(intakeRightLine.value(percent) > 60) if(isADriveDone()) return false;
-  turnLeft(60 * (onRight? -1 : 1) * Deg2Rad);
-  heading = (onRight? 0 : PI); // use sonar to get rotation
-  getPositionUsingSonar();
+
+  position.y = lineY - lineHalfWidth + intakeLineSensorOffset;
+  position.x = wallX - leftSonarOffsetX - leftForwardSonar.distance(inches);
+  onRight = position.x > 0;
+
+  heading = PI * 3/ 2;
+  if(onRight) {
+    Vector relPos = Vector(lineX - position.x, lineY - position.y);
+    turnToHeading(relPos.heading() + PI);
+  } else {
+
+  }
   return true;
 }
 
@@ -58,7 +64,7 @@ void getPositionUsingSonar() {
   float closest = getClosestCardinal();
 
   printf("hs: %f, ", heading * Rad2Deg);
-  heading = closest + headingEstimate;
+  heading = closest - headingEstimate;
 
   printf("hc: %f, he: %f, hf: %f\n", closest * Rad2Deg, headingEstimate * Rad2Deg, heading * Rad2Deg);
 }

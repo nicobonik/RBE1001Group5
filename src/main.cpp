@@ -66,35 +66,45 @@ int main() {
 
   getStartPosition();
 
+  printf("P1\n");
+
   if(testPickupBall()) {
     getPositionUsingSonar();
     //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
+    printf("P2-t\n");
   } else {
     getPositionUsingSonar();
     //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
+    printf("P2-f\n");
   }
   //getPositionUsingSonar();
+
+  //return 0;
   
+
+  turnToHeading(PI * 3 / 2);
+  
+  printf("P3\n");
+
+  for(int n = 0;n < 2;n++){
+    while(!testPickupBall()){
+      driveStraight(-2);
+    }
+  }
+
+  getPositionUsingSonar();
+
+  printf("P4\n");
 
   turnToHeading(PI / 2);
 
-  testPickupBall();
-
   getPositionUsingSonar();
+  
+  printf("P5\n");
 
-  turnToHeading(-PI / 2);
+  ADriveStraight(position.x)
+  
 
-  getPositionUsingSonar();
-
-  /*while(true){
-    getPositionUsingSonar();
-  }*/
-
-  /*tryAddBlue(Vector(3, 7));
-  tryAddRed(Vector(3, 7));
-  tryAddRed(Vector(15, 6));
-  tryAddRed(Vector(6, 7)); // Should overlap
-  PrintBalls();*/
   
   /*driveStraight(-20);
   do {
@@ -105,15 +115,6 @@ int main() {
   printf("dist: %f\n", leftBackSonar.distance(inches));
   driveStraight(0.01);
   //DepositBalls(holdCount);*/
-
-  /*printf("Starting Thread\n");
-  //thread(NavigationLoop).detach();
-  //thread(BallSensorLoop).detach();
-  printf("Threads Active\n");
-
-  NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
-  printf("Starting test navigation");
-  InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));*/
 
   printf("Done\n");
 }

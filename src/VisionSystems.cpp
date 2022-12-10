@@ -159,7 +159,7 @@ bool pickupBall(Ball& ball) {
   Vector checkCenter = pickupCheckBounds.center();
   while(true){
     camera.takeSnapshot(signatures[ball.type]);
-    if (camera.objectCount > 0 && camera.largestObject.centerY > 80)
+    if (camera.objectCount > 0 && camera.largestObject.centerY > 60)
     {
       float x = camera.largestObject.centerX,
             y = camera.largestObject.centerY,
