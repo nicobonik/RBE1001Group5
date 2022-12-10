@@ -7,14 +7,21 @@ using namespace vex;
 #include <math.h>
 
 
-extern const float wallX, wallY,
-            rampX, rampY,
-            rampSonarLength,
-            rightSonarOffsetX,
-            rightSonarOffsetY,
-            forwardSonarOffsetY,
-            dropoffDistance,
-            intakeDegPerBall;
+const float wallX = 47,
+            wallY = 72.5,
+            rampX = 12.75,
+            rampY = 26.75,
+            leftSonarOffsetX = 7.875,
+            leftForwardSonarOffsetY = 1.75,
+            leftBackwardSonarOffsetY = 7.875,
+            leftSonarOffsetDistance = leftBackwardSonarOffsetY - leftForwardSonarOffsetY,
+            leftSonarMidOffset = leftForwardSonarOffsetY + leftSonarOffsetDistance / 2,
+            forwardSonarOffsetY = 1.5,
+            intakeLineSensorOffset = -8.75,
+            rampSonarLength = rampX - leftSonarOffsetX + 4,
+            lineHalfWidth = 1,
+            lineX = wallX - 9.75,
+            lineY = 18.25;
 
 extern bool onRight;
 
@@ -26,6 +33,8 @@ bool IsNavActive();
 bool getStartPosition();
 
 void getPositionUsingSonar();
+
+float getClosestCardinal();
 
 void moveTo(NavNode node);
 

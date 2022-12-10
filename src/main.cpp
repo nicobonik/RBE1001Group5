@@ -29,10 +29,10 @@
 
 using namespace vex;
 
-void testPickupBall() {
+bool testPickupBall() {
   int l = getLargestBall();
   Ball ball = Ball(Vector(), -1, l);
-  pickupBall(ball);
+  return pickupBall(ball);
 }
 
 void NavigationLoop() {
@@ -57,37 +57,59 @@ int main() {
   printf("Starting...\n");
   
   forwardSonar.distance(inches);
-  rightSonar.distance(inches);
-  wait(1, seconds);
+  forwardSonar.distance(inches);
+  wait(3, seconds);
 
   printf("\tSonar Wait Done\n");
 
-  Controller1.ButtonRight.pressed(testPickupBall);
+  //Controller1.ButtonRight.pressed(testPickupBall);
+
+  /*getStartPosition();
+
+  if(testPickupBall()) {
+    getPositionUsingSonar();
+    //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
+  } else {
+    getPositionUsingSonar();
+    //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
+  }
+  getPositionUsingSonar();
   
-  heading = PI / 2;
 
-  getStartPosition();
-
-  testPickupBall();
-
-  turnLeft(PI / 2 * (onRight? -1 : 1));
+  turnToHeading(PI / 2);
 
   testPickupBall();
+
+  getPositionUsingSonar();
+
+  turnToHeading(-PI / 2);
+
+  getPositionUsingSonar();*/
 
   /*tryAddBlue(Vector(3, 7));
   tryAddRed(Vector(3, 7));
   tryAddRed(Vector(15, 6));
   tryAddRed(Vector(6, 7)); // Should overlap
   PrintBalls();*/
+  
+  driveStraight(-20);
+  do {
+    printf("dist: %f\n", leftBackSonar.distance(inches));
+    followLine();
+    wait(0.05, seconds);
+  } while(leftBackSonar.distance(inches) < rampSonarLength);
+  printf("dist: %f\n", leftBackSonar.distance(inches));
+  driveStraight(0.01);
+  //DepositBalls(holdCount);
 
-  printf("Starting Thread");
+  /*printf("Starting Thread\n");
   //thread(NavigationLoop).detach();
   //thread(BallSensorLoop).detach();
-  printf("Threads Active");
+  printf("Threads Active\n");
 
   NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
   printf("Starting test navigation");
-  InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));
+  InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));*/
 
   printf("Done\n");
 }

@@ -1,20 +1,6 @@
 #include "NavigationController.h"
 
-const float wallX = 47,
-            wallY = 72.5,
-            rampX = 12.75,
-            rampY = 26.75,
-            rampSonarLength = 20, //Get
-            leftSonarOffsetX = 7.875,
-            leftForwardSonarOffsetY = 1.75,
-            leftBackwardSonarOffsetY = 7.875,
-            leftSonarOffsetDistance = leftBackwardSonarOffsetY - leftForwardSonarOffsetY,
-            leftSonarMidOffset = leftForwardSonarOffsetY + leftSonarOffsetDistance / 2,
-            forwardSonarOffsetY = 1.5,
-            intakeLineSensorOffset = -8.75, //Get
-            lineHalfWidth = 1,
-            lineX = wallX - 9.75,
-            lineY = 18.25;
+
 
 bool onRight = true;
 
@@ -51,9 +37,9 @@ bool getStartPosition() { // we start with the intake towards the wall, end with
   onRight = position.x > 0;
   ADriveStraight(-lineY);
   while(intakeRightLine.value(percent) > 60) if(isADriveDone()) return false;
-  driveStraight(lineHalfWidth + intakeLineSensorOffset);
-  turnLeft(90 * (onRight? 1 : -1) * Deg2Rad);
-  heading = (onRight? PI : 0); // use sonar to get rotation
+  turnLeft(60 * (onRight? -1 : 1) * Deg2Rad);
+  heading = (onRight? 0 : PI); // use sonar to get rotation
+  getPositionUsingSonar();
   return true;
 }
 
@@ -66,6 +52,18 @@ void getPositionUsingSonar() {
 
   float headingEstimate = atan2f(d1 - d2, leftSonarOffsetDistance);
 
+  
+
+  float closest = getClosestCardinal();
+
+  printf("hs: %f, ", heading * Rad2Deg);
+  heading = closest + headingEstimate;
+
+  printf("hc: %f, he: %f, hf: %f\n", closest * Rad2Deg, headingEstimate * Rad2Deg, heading * Rad2Deg);
+}
+
+float getClosestCardinal() {
+  return (int)(heading * 2 / PI) * PI / 2;
 }
 
 void moveTo(NavNode node) {
@@ -77,7 +75,7 @@ void moveTo(NavNode node) {
   driveStraight(relPos.len() * (node.reverse? -1 : 1));
   //Do Odometry
   if(node.heading < 360) {
-    turnLeft(node.heading - heading);
+    turnLeft(node.heading * Deg2Rad - heading);
     //Do Odometry
   }
   if(node.pickup) {
