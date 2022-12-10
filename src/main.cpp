@@ -12,13 +12,14 @@
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
 // forwardSonar         sonar         A, B            
-// rightSonar           sonar         C, D            
+// leftForwardSonar     sonar         C, D            
 // intakeLeftLine       line          G               
 // intakeRightLine      line          H               
 // camera               vision        9               
 // intakeMotor          motor         8               
 // leftMotor            motor         1               
 // rightMotor           motor         10              
+// leftBackSonar        sonar         E, F            
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
