@@ -10,7 +10,7 @@ brain  Brain;
 // VEXcode device constructors
 controller Controller1 = controller(primary);
 sonar forwardSonar = sonar(Brain.ThreeWirePort.A);
-sonar rightSonar = sonar(Brain.ThreeWirePort.C);
+sonar leftForwardSonar = sonar(Brain.ThreeWirePort.C);
 line intakeLeftLine = line(Brain.ThreeWirePort.G);
 line intakeRightLine = line(Brain.ThreeWirePort.H);
 /*vex-vision-config:begin*/
