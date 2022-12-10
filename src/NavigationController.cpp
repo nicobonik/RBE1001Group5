@@ -58,7 +58,14 @@ bool getStartPosition() { // we start with the intake towards the wall, end with
 }
 
 void getPositionUsingSonar() {
-  float d1 = 
+  float d1 = leftForwardSonar.distance(inches) + leftSonarOffsetX;
+  float d2 = leftBackSonar.distance(inches) + leftSonarOffsetX;
+
+  float dLeft = (d1 + d2) / 2.0;
+  float dNormal = forwardSonar.distance(inches);
+
+  float headingEstimate = atan2f(d1 - d2, leftSonarOffsetDistance);
+
 }
 
 void moveTo(NavNode node) {
