@@ -61,6 +61,9 @@ void getPositionUsingSonar() {
   float xEstimate = wallX - (dLeft * cosf(headingEstimate));
   float yEstimate = dNormal + forwardSonarOffsetY;
 
+  position.x = xEstimate;
+  position.y = yEstimate;
+
   float closest = getClosestCardinal();
 
   printf("hs: %f, ", heading * Rad2Deg);

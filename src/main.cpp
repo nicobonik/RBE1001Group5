@@ -84,37 +84,54 @@ int main() {
 
   turnToHeading(PI * 3 / 2);
   
+  driveStraight(lineY - 8);
+  
   printf("P3\n");
 
-  for(int n = 0;n < 2;n++){
+  while(true){
+    if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
+    printf("%f\n", forwardSonar.distance(inches));
     while(!testPickupBall()){
+      printf("%f\n", forwardSonar.distance(inches));
+      if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
       driveStraight(-2);
     }
+    getPositionUsingSonar();
+    turnToHeading(PI * 3 / 2);
   }
 
   getPositionUsingSonar();
-
-  printf("P4\n");
+  
 
   turnToHeading(PI / 2);
 
+  ADriveStraight(-wallY - intakeLineSensorOffset + 10);
+
+  while(intakeRightLine.value(percent) > 60){ if(isADriveDone()) return 0; }
+
+  driveStraight(0.01);
+  
   getPositionUsingSonar();
-  
-  printf("P5\n");
 
-  ADriveStraight(position.x)
-  
+  driveStraight(-4 + intakeLineSensorOffset);
 
+  turnToHeading(0);
+
+  ADriveStraight(-lineX);
+
+  while(intakeRightLine.value(percent) > 60){ if(isADriveDone()) return 0; }
+
+  driveStraight(0.01);
+
+  turnLeft(-75 * Deg2Rad);
   
-  /*driveStraight(-20);
+  driveStraight(-20);
   do {
-    printf("dist: %f\n", leftBackSonar.distance(inches));
     followLine();
     wait(0.05, seconds);
   } while(leftBackSonar.distance(inches) < rampSonarLength);
-  printf("dist: %f\n", leftBackSonar.distance(inches));
-  driveStraight(0.01);
-  //DepositBalls(holdCount);*/
+  driveStraight(-.005);
+  DepositBalls();
 
   printf("Done\n");
 }

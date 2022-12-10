@@ -29,8 +29,6 @@ bool pickupBall(Ball& ball);
 bool doBallCheck();
 int getLargestBall();
 
-void DepositBalls(int num, bool rev = false);
-void PrepareDeposit(bool rev = false);
-void APrepareDeposit(bool rev = false);
+void DepositBalls();
 
 void PrintBalls();

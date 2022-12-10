@@ -154,7 +154,6 @@ void removeBlue(Ball& ball) {
 
 bool pickupBall(Ball& ball) {
   intakeMotor.setVelocity(120, rpm);
-  APrepareDeposit(true);
   int c = 0;
   Vector checkCenter = pickupCheckBounds.center();
   while(true){
@@ -237,49 +236,8 @@ int getLargestBall() {
   return largest;
 }
 
-void DepositBalls(int num, bool rev) {
-  if(num > holdCount) num = holdCount;
-  PrepareDeposit(rev);
-  intakeMotor.spinFor(rev? reverse : forward, intakeDegPerBall * num, degrees, true);
-  if(rev) {
-    for(int i = holdCount - num - 1; i < holdCount; i++) {
-      holding[i] = EMPTY_BALL;
-    }
-    holdCount -= num;
-  } else {
-    holdOffset += num;
-    for(int i = 0; i < holdCount - num; i++){
-      if(i + num >= MaxHold)
-      holding[i] = holding[i + num];
-      holding[i + num] = EMPTY_BALL;
-    }
-    holdCount -= num;
-  }
-}
-
-void PrepareDeposit(bool rev) {
-  int error = 0;
-  if(rev) {
-    error = -holdOffset;
-    holdOffset = 0;
-  } else {
-    error = holdCapacity - holdCount - holdOffset;
-    holdOffset = holdCapacity - holdCount;
-  }
-  if(error == 0) return;
-  intakeMotor.spinFor(vex::directionType::fwd, intakeDegPerBall * error, degrees, true);
-}
-void APrepareDeposit(bool rev) {
-  int error = 0;
-  if(rev) {
-    error = -holdOffset;
-    holdOffset = 0;
-  } else {
-    error = holdCapacity - holdCount - holdOffset;
-    holdOffset = holdCapacity - holdCount;
-  }
-  if(error == 0) return;
-  intakeMotor.spinFor(vex::directionType::fwd, intakeDegPerBall * error, degrees, false);
+void DepositBalls() {
+  intakeMotor.spinFor(reverse, intakeDegPerBall * holdCount, degrees, true);
 }
 
 void PrintBallArray(Ball balls[], int size) {
