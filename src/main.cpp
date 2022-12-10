@@ -64,7 +64,7 @@ int main() {
 
   //Controller1.ButtonRight.pressed(testPickupBall);
 
-  /*getStartPosition();
+  getStartPosition();
 
   if(testPickupBall()) {
     getPositionUsingSonar();
@@ -73,7 +73,7 @@ int main() {
     getPositionUsingSonar();
     //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
   }
-  getPositionUsingSonar();
+  //getPositionUsingSonar();
   
 
   turnToHeading(PI / 2);
@@ -84,7 +84,11 @@ int main() {
 
   turnToHeading(-PI / 2);
 
-  getPositionUsingSonar();*/
+  getPositionUsingSonar();
+
+  /*while(true){
+    getPositionUsingSonar();
+  }*/
 
   /*tryAddBlue(Vector(3, 7));
   tryAddRed(Vector(3, 7));
@@ -92,7 +96,7 @@ int main() {
   tryAddRed(Vector(6, 7)); // Should overlap
   PrintBalls();*/
   
-  driveStraight(-20);
+  /*driveStraight(-20);
   do {
     printf("dist: %f\n", leftBackSonar.distance(inches));
     followLine();
@@ -100,7 +104,7 @@ int main() {
   } while(leftBackSonar.distance(inches) < rampSonarLength);
   printf("dist: %f\n", leftBackSonar.distance(inches));
   driveStraight(0.01);
-  //DepositBalls(holdCount);
+  //DepositBalls(holdCount);*/
 
   /*printf("Starting Thread\n");
   //thread(NavigationLoop).detach();

@@ -64,7 +64,7 @@ void getPositionUsingSonar() {
 }
 
 float getClosestCardinal() {
-  return (int)(heading * 2 / PI) * PI / 2;
+  return (int)roundf(heading * 2 / PI) * PI / 2;
 }
 
 void moveTo(NavNode node) {
