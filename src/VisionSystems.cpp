@@ -42,7 +42,9 @@ bool pickupBall(int type) {
       //printf("\tx: %f, y: %f\n", checkCenter.x, checkCenter.y);
       //printf("\tx: %f, y: %f\n", error.x, error.y);
       //Call odometry
-      driveRPM(forwardPID.update(error.y), turnPID.update(-error.x));
+      float forwardRawOutput = forwardPID.update(error.y);
+      float forwardCorrectedOutput = fminf(fabsf(forwardRawOutput), 30) * (forwardRawOutput < 0 ? -1.0 : 1.0);
+      driveRPM(forwardCorrectedOutput, turnPID.update(-error.x));
       c = 0;
     } else {
       c++;
