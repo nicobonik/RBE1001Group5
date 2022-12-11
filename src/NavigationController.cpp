@@ -1,7 +1,5 @@
 #include "NavigationController.h"
 
-
-
 bool onRight = true;
 
 bool getStartPosition() {
@@ -32,8 +30,10 @@ void getPositionUsingSonar() {
 
   float headingEstimate = atan2f(d1 - d2, leftSonarOffsetDistance);
 
+  //Possible issue that may not present itself to be an issue in our auto path: 
+  //this xEstimate and yEstimate don't take into account the cardinal direction of the robot
   float xEstimate = wallX - (dLeft * cosf(headingEstimate));
-  float yEstimate = dNormal + forwardSonarOffsetY;
+  float yEstimate = (dNormal * cosf(headingEstimate)) + forwardSonarOffsetY;
 
   position.x = xEstimate;
   position.y = yEstimate;
