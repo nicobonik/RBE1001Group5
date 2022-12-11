@@ -4,7 +4,7 @@
 
 bool onRight = true;
 
-bool getStartPosition() { // we start with the intake towards the wall, end with the intake away from the center
+bool getStartPosition() {
   ADriveStraight(-lineY);
   while(intakeRightLine.value(percent) > 60) if(isADriveDone()) return false;
 
@@ -17,7 +17,8 @@ bool getStartPosition() { // we start with the intake towards the wall, end with
     Vector relPos = Vector(lineX - position.x, lineY - position.y);
     turnToHeading(relPos.heading() + PI);
   } else {
-
+    Vector relPos = Vector(-lineX + position.x, lineY - position.y);
+    turnToHeading(relPos.heading() + PI);
   }
   return true;
 }
