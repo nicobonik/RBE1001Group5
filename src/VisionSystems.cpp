@@ -14,14 +14,14 @@
 
 int holdCount;
 
-const float pickupDrive = -5;
+const float pickupDrive = -5.5;
 
 signature signatures[] { camera__REDBALL, camera__BLUEBALL };
 
-Bounds pickupCheckBounds = Bounds(Vector(157, 160), 35, 35);
+Bounds pickupCheckBounds = Bounds(Vector(135, 160), 35, 35);
 int holdOffset = 0;
 
-PID forwardPID(PIDCoefficients(10, 0, 5, -60, 60)), turnPID(PIDCoefficients(3, 0, 2, -30, 30));
+PID forwardPID(PIDCoefficients(20, 0, 10, -60, 60)), turnPID(PIDCoefficients(3, 0, 2, -30, 30));
 
 bool pickupBall(int type) {
   intakeMotor.setVelocity(120, rpm);

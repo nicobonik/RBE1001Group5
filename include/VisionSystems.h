@@ -8,7 +8,7 @@
 
 using namespace vex;
 
-const int holdCapacity = 4;
+const int holdCapacity = 3;
 extern int holdCount;
 
 bool pickupBall(int type);

@@ -49,33 +49,43 @@ int main() {
   getStartPosition();
 
   if(testPickupBall()) {
-    getPositionUsingSonar();
+    if(onRight)
+      getPositionUsingSonar();
     //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
     printf("P2-t\n");
   } else {
-    getPositionUsingSonar();
+    driveStraight(12 - (position - Vector(lineX * (onRight? 1: -1), lineY)).len());
+    if(onRight)
+      getPositionUsingSonar();
     //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
     printf("P2-f\n");
   }
-  
 
   turnToHeading(PI * 3 / 2);
   
   driveStraight(lineY - 8);
 
   while(holdCount < holdCapacity){
-    if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
+    if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 20) break;
     while(!testPickupBall()){
-      if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
+      if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 20) break;
       driveStraight(-2);
     }
-    getPositionUsingSonar();
-    turnToHeading(PI * 3 / 2);
+    if(onRight) {
+      getPositionUsingSonar();
+      turnToHeading(PI * 3 / 2);
+    }
   }
 
-  getPositionUsingSonar();
+  if(onRight)
+    getPositionUsingSonar();
   
   turnToHeading(PI / 2);
+
+  if(!onRight) {
+    getPositionUsingSonar();
+    turnToHeading(PI / 2);
+  }
 
   ADriveStraight(-wallY - intakeLineSensorOffset + 10);
 
@@ -99,6 +109,12 @@ int main() {
   turnLeft(75 * Deg2Rad * (onRight? -1 : 1));
   
   driveStraight(-20);
+
+  while(leftBackSonar.distance(inches) > rampSonarLength){
+    followLine();
+    wait(0.05, seconds);
+  }
+
   do {
     followLine();
     wait(0.05, seconds);
