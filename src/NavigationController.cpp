@@ -33,7 +33,7 @@ void getPositionUsingSonar() {
   float headingEstimate = atan2f(d1 - d2, leftSonarOffsetDistance);
 
   float xEstimate = wallX - (dLeft * cosf(headingEstimate));
-  float yEstimate = dNormal + forwardSonarOffsetY;
+  float yEstimate = (dNormal * cosf(headingEstimate)) + forwardSonarOffsetY;
 
   position.x = xEstimate;
   position.y = yEstimate;
