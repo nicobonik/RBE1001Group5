@@ -31,6 +31,7 @@ bool isADriveDone();
 void driveStraight(float inches);
 void ADriveStraight(float inches);
 
+void turnToHeading(float targetRad);
 void turnLeft(float targetRadians);
 void ATurnLeft(float targetRadians);
 
@@ -38,3 +39,4 @@ void turnAround(float targetDegrees, float offset);
 
 void driveRPM(float speed, float turn);
 void followLine(float inches, bool reverse = false);
+void followLine();

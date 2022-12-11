@@ -72,6 +72,11 @@ void turnLeft(float targetRadians) {
   heading += targetRadians;
 }
 
+void turnToHeading(float targetRad) {
+  turnLeft(targetRad - heading);
+  heading = targetRad;
+}
+
 void ATurnLeft(float targetRadians) {
   bool isRight = targetRadians >= 0;
   correctWheels(isRight, !isRight);
@@ -129,9 +134,14 @@ void driveRPM(float speed, float turn) {
 
 void followLine(float inches, bool reverse) {
   float m = reverse? -1 : 1;
+  printf("%f, %f\n", (inches * 60 / (RPM * wheelCircumference)), RPM);
   double finalTime = (inches * 60 / (RPM * wheelCircumference)) + Brain.timer(seconds);
   while(Brain.timer(seconds) < finalTime) {
     driveRPM(RPM * m, intakeRightLine.reflectivity() - intakeLeftLine.reflectivity());
   }
   position += Vector(inches,0).rotate(heading) * m;
+}
+
+void followLine() {
+  driveRPM(-RPM, 3*(intakeLeftLine.value(percent) - intakeRightLine.value(percent)));
 }

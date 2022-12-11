@@ -8,29 +8,12 @@
 
 using namespace vex;
 
-const int BallListSize = 8, MaxHold = 5;
-extern Ball redBalls[], blueBalls[], holding[];
-extern int redBallCount, blueBallCount, holdCount;
+const int holdCapacity = 4;
+extern int holdCount;
 
-void addBall(Ball& ball);
-int addRed(Ball& ball);
-int addBlue(Ball& ball);
-
-Ball& tryAddBall(Vector p, int type);
-Ball& tryAddRed(Vector p);
-Ball& tryAddBlue(Vector p);
-
-void removeBall(Ball& ball);
-void removeRed(Ball& ball);
-void removeBlue(Ball& ball);
-
-bool pickupBall(Ball& ball);
+bool pickupBall(int type);
 
 bool doBallCheck();
 int getLargestBall();
 
-void DepositBalls(int num, bool rev = false);
-void PrepareDeposit(bool rev = false);
-void APrepareDeposit(bool rev = false);
-
-void PrintBalls();
+void DepositBalls();

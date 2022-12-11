@@ -21,6 +21,7 @@ extern vision camera;
 extern motor intakeMotor;
 extern motor leftMotor;
 extern motor rightMotor;
+extern sonar leftBackSonar;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

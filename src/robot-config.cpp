@@ -22,6 +22,7 @@ vision camera = vision (PORT9, 50, camera__YELLOWBALL, camera__REDBALL, camera__
 motor intakeMotor = motor(PORT8, ratio18_1, false);
 motor leftMotor = motor(PORT1, ratio18_1, true);
 motor rightMotor = motor(PORT10, ratio18_1, false);
+sonar leftBackSonar = sonar(Brain.ThreeWirePort.E);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

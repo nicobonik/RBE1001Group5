@@ -12,13 +12,14 @@
 // [Name]               [Type]        [Port(s)]
 // Controller1          controller                    
 // forwardSonar         sonar         A, B            
-// rightSonar           sonar         C, D            
+// leftForwardSonar     sonar         C, D            
 // intakeLeftLine       line          G               
 // intakeRightLine      line          H               
 // camera               vision        9               
 // intakeMotor          motor         8               
 // leftMotor            motor         1               
 // rightMotor           motor         10              
+// leftBackSonar        sonar         E, F            
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -28,26 +29,10 @@
 
 using namespace vex;
 
-void testPickupBall() {
+bool testPickupBall() {
   int l = getLargestBall();
-  Ball ball = Ball(Vector(), -1, l);
-  pickupBall(ball);
-}
-
-void NavigationLoop() {
-  StopNavigation();
-  while(true) {
-    //printf("Nav Loop...");
-    Navigate();
-  }
-}
-
-void BallSensorLoop() {
-  while(true) {
-    //printf("Sensor Loop...");
-    
-    //doBallCheck();
-  }
+  if(l < 0) return false;
+  return pickupBall(l);
 }
 
 int main() {
@@ -56,37 +41,70 @@ int main() {
   printf("Starting...\n");
   
   forwardSonar.distance(inches);
-  rightSonar.distance(inches);
-  wait(1, seconds);
+  forwardSonar.distance(inches);
+  wait(3, seconds);
 
   printf("\tSonar Wait Done\n");
 
-  Controller1.ButtonRight.pressed(testPickupBall);
-  
-  heading = PI / 2;
-
   getStartPosition();
 
-  testPickupBall();
+  if(testPickupBall()) {
+    getPositionUsingSonar();
+    //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
+    printf("P2-t\n");
+  } else {
+    getPositionUsingSonar();
+    //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
+    printf("P2-f\n");
+  }
+  
 
-  turnLeft(PI / 2 * (onRight? -1 : 1));
+  turnToHeading(PI * 3 / 2);
+  
+  driveStraight(lineY - 8);
 
-  testPickupBall();
+  while(holdCount < holdCapacity){
+    if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
+    while(!testPickupBall()){
+      if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
+      driveStraight(-2);
+    }
+    getPositionUsingSonar();
+    turnToHeading(PI * 3 / 2);
+  }
 
-  /*tryAddBlue(Vector(3, 7));
-  tryAddRed(Vector(3, 7));
-  tryAddRed(Vector(15, 6));
-  tryAddRed(Vector(6, 7)); // Should overlap
-  PrintBalls();*/
+  getPositionUsingSonar();
+  
+  turnToHeading(PI / 2);
 
-  printf("Starting Thread");
-  //thread(NavigationLoop).detach();
-  //thread(BallSensorLoop).detach();
-  printf("Threads Active");
+  ADriveStraight(-wallY - intakeLineSensorOffset + 10);
 
-  NavNode nodes[] = {NavNode(Vector(5,3)), NavNode(Vector(5, 10)), NavNode(Vector(-20, 5), -1, 361, true), NavNode(Vector(0,0), -1, 0)};
-  printf("Starting test navigation");
-  InitNavigation(nodes, sizeof(nodes) / sizeof(NavNode));
+  while(intakeRightLine.value(percent) > 60){ if(isADriveDone()) return 0; }
+
+  driveStraight(0.01);
+  
+  getPositionUsingSonar();
+
+  driveStraight(-4 + intakeLineSensorOffset);
+
+  if(onRight) turnToHeading(0);
+  else        turnToHeading(PI);
+
+  ADriveStraight(-lineX);
+
+  while(intakeRightLine.value(percent) > 60){ if(isADriveDone()) return 0; }
+
+  driveStraight(0.01);
+
+  turnLeft(75 * Deg2Rad * (onRight? -1 : 1));
+  
+  driveStraight(-20);
+  do {
+    followLine();
+    wait(0.05, seconds);
+  } while(leftBackSonar.distance(inches) < rampSonarLength);
+  driveStraight(-.005);
+  DepositBalls();
 
   printf("Done\n");
 }
