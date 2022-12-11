@@ -93,26 +93,3 @@ Bounds Bounds::operator + (Vector v) {
   b.max = max + v;
   return b;
 }
-
-RotatedBounds::RotatedBounds(Vector mi, Vector ma, Vector po, float o) { min = mi; max = ma; pos = po; orient = o; }
-bool RotatedBounds::collideBasic(Bounds b) {
-  UpdateBounds();
-  return b.collide(bounds + pos);
-}
-void RotatedBounds::UpdateBounds() {
-  if(orient == lastOrient) return;
-  lastOrient = orient;
-  Vector rotMin = min.rotate(orient),
-          rotMax = max.rotate(orient);
-  bounds.min.x = fminf(rotMin.x, rotMax.x);
-  bounds.min.y = fminf(rotMin.y, rotMax.y),
-  bounds.max.x = fmaxf(rotMin.x, rotMax.x),
-  bounds.max.y = fmaxf(rotMin.y, rotMax.y);
-}
-
-Ball::Ball() {}
-Ball::Ball(Vector p, int i, int t) { pos = p, index = i; type = t; }
-
-NavNode::NavNode() {}
-NavNode::NavNode(Vector p, float s, float h, bool rev) { pos = p; speed = s, heading = h; reverse = rev; }
-NavNode::NavNode(Vector p, float s, bool rev, Ball b) { pos = p; speed = s; reverse = rev; pickup = true; ball = b; }

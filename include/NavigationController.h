@@ -25,20 +25,8 @@ const float wallX = 47,
 
 extern bool onRight;
 
-void InitNavigation(NavNode n[], int size);
-void StopNavigation();
-
-bool IsNavActive();
-
 bool getStartPosition();
 
 void getPositionUsingSonar();
 
 float getClosestCardinal();
-
-void moveTo(NavNode node);
-
-void Navigate();
-void ANavigate();
-
-void PrintNodes();

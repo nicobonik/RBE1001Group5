@@ -31,24 +31,8 @@ using namespace vex;
 
 bool testPickupBall() {
   int l = getLargestBall();
-  Ball ball = Ball(Vector(), -1, l);
-  return pickupBall(ball);
-}
-
-void NavigationLoop() {
-  StopNavigation();
-  while(true) {
-    //printf("Nav Loop...");
-    Navigate();
-  }
-}
-
-void BallSensorLoop() {
-  while(true) {
-    //printf("Sensor Loop...");
-    
-    //doBallCheck();
-  }
+  if(l < 0) return false;
+  return pickupBall(l);
 }
 
 int main() {
@@ -88,7 +72,7 @@ int main() {
   
   printf("P3\n");
 
-  while(true){
+  while(holdCount < holdCapacity){
     if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 10) break;
     printf("%f\n", forwardSonar.distance(inches));
     while(!testPickupBall()){
@@ -102,7 +86,6 @@ int main() {
 
   getPositionUsingSonar();
   
-
   turnToHeading(PI / 2);
 
   ADriveStraight(-wallY - intakeLineSensorOffset + 10);
