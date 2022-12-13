@@ -32,6 +32,7 @@ void driveStraight(float inches);
 void ADriveStraight(float inches);
 
 void turnToHeading(float targetRad);
+void turnToHeading(float targetRad, bool reverse);
 void turnLeft(float targetRadians);
 void ATurnLeft(float targetRadians);
 

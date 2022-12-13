@@ -48,7 +48,7 @@ int main() {
 
   getStartPosition();
 
-  if(testPickupBall()) {
+  if(pickupBall(onRight? 0 : 1)) {
     if(onRight)
       getPositionUsingSonar();
     //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
@@ -84,7 +84,7 @@ int main() {
 
   if(!onRight) {
     getPositionUsingSonar();
-    turnToHeading(PI / 2);
+    turnToHeading(PI / 2, true);
   }
 
   ADriveStraight(-wallY - intakeLineSensorOffset + 10);
@@ -93,7 +93,10 @@ int main() {
 
   driveStraight(0.01);
   
-  getPositionUsingSonar();
+  if(!onRight) {
+    getPositionUsingSonar();
+    turnToHeading(PI / 2);
+  }
 
   driveStraight(-4 + intakeLineSensorOffset);
 
