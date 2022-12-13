@@ -80,7 +80,7 @@ void turnToHeading(float targetRad, bool reverse) {
   if(reverse) {
     float dif = targetRad - heading;
     if(dif > 0) turnLeft(dif - 2 * PI);
-    else turnLeft(2 * PI - dif);
+    else turnLeft(2 * PI + dif);
     heading = targetRad;
   } else turnToHeading(targetRad);
 }

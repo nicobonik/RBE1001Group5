@@ -80,11 +80,11 @@ int main() {
   if(onRight)
     getPositionUsingSonar();
   
-  turnToHeading(PI / 2);
+  turnToHeading(PI / 2, !onRight);
 
   if(!onRight) {
     getPositionUsingSonar();
-    turnToHeading(PI / 2, true);
+    turnToHeading(PI / 2);
   }
 
   ADriveStraight(-wallY - intakeLineSensorOffset + 10);

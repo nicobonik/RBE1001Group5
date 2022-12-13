@@ -79,5 +79,6 @@ int getLargestBall() {
 }
 
 void DepositBalls() {
-  intakeMotor.spinFor(reverse, intakeDegPerBall * holdCount, degrees, true);
+  intakeMotor.spinFor(reverse, intakeDegPerBall * (holdCount + 1), degrees, true);
+  intakeMotor.spinFor(forward, intakeDegPerBall, degrees, true);
 }
