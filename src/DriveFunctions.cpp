@@ -16,6 +16,7 @@ const float wheelCorrectiveOffset = .25 * degreesPerInch/ gearRatio, wheelCorrec
 Vector position = Vector();
 float heading = 0;
 
+// Used to attempt to correct for wheel slack when reversing directions, not completely sure it works
 // The arguments are what they're going to be, not what they are
 void correctWheels(bool leftForward, bool rightForward) {
   if(leftForward != wheelForwardLeft) {
@@ -35,18 +36,17 @@ void correctWheels(bool leftForward, bool rightForward) {
   leftMotor.setVelocity(RPM, rpm);
   rightMotor.setVelocity(RPM, rpm);
 }
-
 // In inches per second
 void setSpeed(float speed) {
   RPM = fabsf(speed * gearRatio * wheelCircumference);
   leftMotor.setVelocity(RPM, rpm);
   rightMotor.setVelocity(RPM, rpm);
 }
-
+// Checks if the motors are moving
 bool isADriveDone() {
   return rightMotor.isDone() && leftMotor.isDone();
 }
-
+// Drives the robot straight a given number of inches, takes negative numbers
 void driveStraight(float inches) {
   bool isForward = inches >= 0;
   correctWheels(isForward, isForward);
@@ -54,7 +54,7 @@ void driveStraight(float inches) {
   rightMotor.spinFor(vex::directionType::fwd, gearRatio * inches * degreesPerInch, degrees, true);
   position += Vector(inches, 0).rotate(heading);
 }
-
+// Asyncronous version
 void ADriveStraight(float inches) {
   bool isForward = inches >= 0;
   correctWheels(isForward, isForward);
@@ -62,7 +62,7 @@ void ADriveStraight(float inches) {
   rightMotor.spinFor(vex::directionType::fwd, gearRatio * inches * degreesPerInch, degrees, false);
   position += Vector(inches, 0).rotate(heading);
 }
-
+// Turns the robot left by x radians
 void turnLeft(float targetRadians) {
   bool isRight = targetRadians >= 0;
   correctWheels(isRight, !isRight);
@@ -71,11 +71,12 @@ void turnLeft(float targetRadians) {
   rightMotor.spinFor(vex::directionType::fwd, rotationDegrees, degrees, true);
   heading += targetRadians;
 }
-
+// Turns a robot to a given heading
 void turnToHeading(float targetRad) {
   turnLeft(targetRad - heading);
   heading = targetRad;
 }
+// Allows the robot to turn the long way around to match a heading
 void turnToHeading(float targetRad, bool reverse) {
   if(reverse) {
     float dif = targetRad - heading;
@@ -84,7 +85,7 @@ void turnToHeading(float targetRad, bool reverse) {
     heading = targetRad;
   } else turnToHeading(targetRad);
 }
-
+// Async turnLeft
 void ATurnLeft(float targetRadians) {
   bool isRight = targetRadians >= 0;
   correctWheels(isRight, !isRight);
@@ -93,7 +94,8 @@ void ATurnLeft(float targetRadians) {
   rightMotor.spinFor(vex::directionType::fwd, -rotationDegrees, degrees, false);
   heading += targetRadians * Deg2Rad;
 }
-
+// Turns x degrees around a circle with o radius
+// Both values support negative numbers
 void turnAround(float targetDegrees, float offset) {
   float rotationMult = (targetDegrees / 180.0) * PI * gearRatio * degreesPerInch;
   float leftDistance = offset + wheelTrack / 2;
@@ -126,7 +128,8 @@ void turnAround(float targetDegrees, float offset) {
               Vector(0, -offset).rotate(heading + targetDegrees);
   heading += targetDegrees * Deg2Rad;
 }
-
+// Drives with a set speed forward and set speed turning
+// Both correspond to wheel RPM, positive turn is right 
 void driveRPM(float speed, float turn) {
 
   correctWheels(speed - turn > 0,
@@ -139,17 +142,7 @@ void driveRPM(float speed, float turn) {
   rightMotor.spin(forward);
 
 }
-
-void followLine(float inches, bool reverse) {
-  float m = reverse? -1 : 1;
-  printf("%f, %f\n", (inches * 60 / (RPM * wheelCircumference)), RPM);
-  double finalTime = (inches * 60 / (RPM * wheelCircumference)) + Brain.timer(seconds);
-  while(Brain.timer(seconds) < finalTime) {
-    driveRPM(RPM * m, intakeRightLine.reflectivity() - intakeLeftLine.reflectivity());
-  }
-  position += Vector(inches,0).rotate(heading) * m;
-}
-
+// Follows a line with the intake first
 void followLine() {
   driveRPM(-RPM, 3*(intakeLeftLine.value(percent) - intakeRightLine.value(percent)));
 }

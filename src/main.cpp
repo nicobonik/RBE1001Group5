@@ -29,6 +29,7 @@
 
 using namespace vex;
 
+// Finds and attempts to pick up the largest ball it can find
 bool testPickupBall() {
   int l = getLargestBall();
   if(l < 0) return false;
@@ -48,24 +49,22 @@ int main() {
 
   getStartPosition();
 
-  if(pickupBall(onRight? 0 : 1)) {
-    if(onRight)
-      getPositionUsingSonar();
-    //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
-    printf("P2-t\n");
-  } else {
+  //Picking up the first ball
+  if(!pickupBall(onRight? 0 : 1))
     driveStraight(12 - (position - Vector(lineX * (onRight? 1: -1), lineY)).len());
-    if(onRight)
-      getPositionUsingSonar();
-    //moveTo(NavNode(Vector(lineX * (onRight? 1 : -1), lineY), -1, true));
-    printf("P2-f\n");
-  }
 
+  if(onRight)
+    getPositionUsingSonar();
+  
+  //Turning towards the back wall
   turnToHeading(PI * 3 / 2);
   
   driveStraight(lineY - 8);
 
+  // Loops through moving forward and looking for balls until...
+  //   ...we have as many balls as we can hold...
   while(holdCount < holdCapacity){
+    // ...or it goes to far from the front wall 
     if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 20) break;
     while(!testPickupBall()){
       if(forwardSonar.distance(inches) > wallY + intakeLineSensorOffset - 20) break;
@@ -76,53 +75,50 @@ int main() {
       turnToHeading(PI * 3 / 2);
     }
   }
-
   if(onRight)
     getPositionUsingSonar();
   
+  // Turning towards the front wall
   turnToHeading(PI / 2, !onRight);
-
   if(!onRight) {
     getPositionUsingSonar();
     turnToHeading(PI / 2);
   }
 
+  // Drive towards the front wall until you hit the line or go to far (stop the program)
   ADriveStraight(-wallY - intakeLineSensorOffset + 10);
-
   while(intakeRightLine.value(percent) > 60){ if(isADriveDone()) return 0; }
-
   driveStraight(0.01);
-  
   if(!onRight) {
     getPositionUsingSonar();
     turnToHeading(PI / 2);
   }
-
   driveStraight(-4 + intakeLineSensorOffset);
 
+  // Turn towards center
   if(onRight) turnToHeading(0);
   else        turnToHeading(PI);
 
+  // Drive towards the center until the line is hit or it goes to far
   ADriveStraight(-lineX);
-
   while(intakeRightLine.value(percent) > 60){ if(isADriveDone()) return 0; }
-
   driveStraight(0.01);
 
+  // Start the climb up the ramp
   turnLeft(75 * Deg2Rad * (onRight? -1 : 1));
-  
   driveStraight(-20);
-
+  // If the checking sonar is already too high, go until it isn't
   while(leftBackSonar.distance(inches) > rampSonarLength){
     followLine();
     wait(0.05, seconds);
   }
-
+  // Check if we've hit the top of the ramp using the sonar
   do {
     followLine();
     wait(0.05, seconds);
   } while(leftBackSonar.distance(inches) < rampSonarLength);
   driveStraight(-.005);
+  // Deposit
   DepositBalls();
 
   printf("Done\n");

@@ -2,6 +2,7 @@
 
 bool onRight = true;
 
+// Gets the side the robot is on, lines it up with the horizontal line, and attempts to point towards the respective ball 
 bool getStartPosition() {
   ADriveStraight(-lineY);
   while(intakeRightLine.value(percent) > 60) if(isADriveDone()) return false;
@@ -21,6 +22,7 @@ bool getStartPosition() {
   return true;
 }
 
+// Gets position and heading with sonar
 void getPositionUsingSonar() {
   float d1 = leftForwardSonar.distance(inches) + leftSonarOffsetX;
   float d2 = leftBackSonar.distance(inches) + leftSonarOffsetX;
@@ -46,6 +48,7 @@ void getPositionUsingSonar() {
   printf("hc: %f, he: %f, hf: %f\n", closest * Rad2Deg, headingEstimate * Rad2Deg, heading * Rad2Deg);
 }
 
+//Gets the closest cardinal direction
 float getClosestCardinal() {
   return (int)roundf(heading * 2 / PI) * PI / 2;
 }

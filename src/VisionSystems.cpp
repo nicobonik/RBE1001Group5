@@ -23,6 +23,7 @@ int holdOffset = 0;
 
 PID forwardPID(PIDCoefficients(20, 0, 10, -60, 60)), turnPID(PIDCoefficients(3, 0, 2, -30, 30));
 
+//Attempts to pick up a ball with the given color
 bool pickupBall(int type) {
   intakeMotor.setVelocity(120, rpm);
   int c = 0;
@@ -36,16 +37,13 @@ bool pickupBall(int type) {
             halfwidth = camera.largestObject.width / 2,
             halfheight = camera.largestObject.height / 2;
       Bounds ballBounds = Bounds(x - halfwidth, y - halfheight, x + halfwidth, y + halfheight);
-      //printf("x: %f, y: %f\n", x, y);
       if(pickupCheckBounds.contains(ballBounds)) break;
       Vector error = ballBounds.center() - checkCenter;
-      //printf("\tx: %f, y: %f\n", checkCenter.x, checkCenter.y);
-      //printf("\tx: %f, y: %f\n", error.x, error.y);
-      //Call odometry
       driveRPM(forwardPID.update(error.y), turnPID.update(-error.x));
       c = 0;
     } else {
       c++;
+      // If the camera can't see a ball for 50 consecutive frames it stops and returns false
       if(c > 50) {
         printf("BREAK\n");
         driveRPM(0, 0);
@@ -56,7 +54,7 @@ bool pickupBall(int type) {
   driveRPM(0, 0);
   setSpeed(1.5);
   Controller1.Screen.clearScreen();
-  Controller1.Screen.print("Speed Set To: %f", RPM);
+  Controller1.Screen.print("Speed Set To: %f", RPM); // doesn't quite work (goes off screen)
   printf("Speed Set To: %f\n", RPM);
   driveStraight(pickupDrive);
   intakeMotor.spinFor(vex::directionType::fwd, intakeDegPerBall, degrees, true); //Add something to make sure it picked up the ball?
@@ -64,6 +62,7 @@ bool pickupBall(int type) {
   return true;
 }
 
+// Gets the color of the largest ball
 int getLargestBall() {
   int largest = 0;
   int maxArea = 0;
@@ -78,6 +77,7 @@ int getLargestBall() {
   return largest;
 }
 
+// Deposits balls, will deposit one extra then return to the starting position
 void DepositBalls() {
   intakeMotor.spinFor(reverse, intakeDegPerBall * (holdCount + 1), degrees, true);
   intakeMotor.spinFor(forward, intakeDegPerBall, degrees, true);

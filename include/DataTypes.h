@@ -4,7 +4,7 @@
 
 extern const float PI;
 extern const float Deg2Rad, Rad2Deg;
-
+//Basic vector class, most functions not used
 struct Vector {
   float x, y;
   Vector();
@@ -25,6 +25,7 @@ struct Vector {
   Vector normalize();
   float dot(Vector v);
 };
+// A grid-aligned bounding box, used for the vision systems
 struct Bounds {
   Vector min = Vector(), max = Vector();
   Bounds();
